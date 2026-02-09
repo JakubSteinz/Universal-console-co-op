@@ -1,1 +1,1 @@
-We most probably have not started, look at this page in a millenia next time :P Thanks!
+Verze 1 je venku pro universal console page, vklídku se podívejte na zadání, ale subjekt se možná změní v nějakou danou dobu :D
