@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNI-CONSOLE // SYSTEM ACCESS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="scanlines"></div>
+    <div class="noise"></div>
+    <div class="vignette"></div>
+
+    <!-- Snake Game Overlay -->
+    <div id="snake-overlay" class="game-overlay hidden">
+        <div class="game-box">
+            <div class="game-header">SNAKE PROTOCOL v1.0 <span class="close-hint">[ESC] TO EXIT</span></div>
+            <canvas id="snake-canvas" width="600" height="400"></canvas>
+            <div class="game-score">SCORE: <span id="snake-score">0</span></div>
+        </div>
+    </div>
+
+    <!-- Pong Game Overlay -->
+    <div id="pong-overlay" class="game-overlay hidden">
+        <div class="game-box">
+            <div class="game-header">CYBER-PONG v2.0 <span class="close-hint">[ESC] TO EXIT</span></div>
+            <canvas id="pong-canvas" width="600" height="400"></canvas>
+            <div class="game-score">PLAYER: <span id="pong-p-score">0</span> | CPU: <span id="pong-c-score">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <!-- Header / Status Bar -->
+        <header class="top-bar">
+            <div class="branding">UNI-CONSOLE <span class="version">v2.0.4-ALPHA</span></div>
+            <div class="top-stats">
+                <span class="stat-item"><span class="label">CPU</span> <span class="value bar-container">
+                        <div class="bar" style="width: 42%"></div>
+                    </span></span>
+                <span class="stat-item"><span class="label">MEM</span> <span class="value">14TB / 64TB</span></span>
+                <span class="stat-item"><span class="label">NET</span> <span
+                        class="value status-ok">SECURE</span></span>
+                <span class="stat-item"><span class="label">THEME</span> <input type="range" id="theme-slider" min="0"
+                        max="6" value="0" step="1"></span>
+                <span class="stat-item"><span class="label">TIME</span> <span class="value"
+                        id="clock">00:00:00</span></span>
+            </div>
+        </header>
+
+        <!-- Main Workspace Grid -->
+        <main class="workspace">
+
+            <!-- Left Panel: Connected World Status -->
+            <aside class="panel left-panel">
+                <div class="panel-header">
+                    <h3>// NETWORK_GRID</h3>
+                </div>
+                <div class="panel-content" id="world-status-panel">
+
+                    <div class="world-selector">
+                        <div class="label" style="margin-bottom:5px; color:var(--color-dim); font-size:0.8rem;">SELECT
+                            TARGET SYSTEM:</div>
+                        <div id="world-list-container">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <div class="status-block">
+                        <div class="label">CURRENT CONNECTION</div>
+                        <div class="val-highlight" id="current-world-name">DISCONNECTED</div>
+                    </div>
+                    <div class="status-block">
+                        <div class="label">ENTITIES DETECTED</div>
+                        <div class="val-highlight" id="entity-count">0</div>
+                    </div>
+                    <div class="viz-container" id="minimap">
+                        <div class="grid-bg"></div>
+                        <div class="map-message">NO SIGNAL</div>
+                    </div>
+                    <div class="log-feed" id="system-log">
+                        <div class="log-entry">System initialized.</div>
+                        <div class="log-entry">Waiting for connection...</div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Panel: Main Terminal -->
+            <section class="panel center-panel terminal-container">
+                <div class="terminal-overlay-decor"></div>
+                <div class="terminal-output" id="terminal-output">
+                    <div class="msg system">Initializing Universal Console Interface...</div>
+                    <div class="msg system">Loading core modules... [OK]</div>
+                    <div class="msg system">Loading graphic drivers... [OK]</div>
+                    <div class="msg info">Welcome, Admin.</div>
+                    <div class="msg info">Type 'help' to view available commands.</div>
+
+
+                </div>
+                <div class="terminal-input-area" style="position: relative;">
+                    <div id="suggestion-popup" class="suggestion-popup hidden"></div>
+                    <span class="prompt">admin@uni-con:~$</span>
+                    <div class="input-wrapper" style="position: relative; flex: 1; display: flex;">
+                        <input type="text" id="ghost-input" disabled autocomplete="off" spellcheck="false">
+                        <input type="text" id="command-input" autofocus autocomplete="off" spellcheck="false">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel: Object Details / Inspection -->
+            <aside class="panel right-panel">
+                <div class="panel-header">
+                    <h3>// OBJECT_INSPECTOR</h3>
+                </div>
+                <div class="panel-content" id="inspector-panel">
+                    <div class="empty-state">SELECT AN OBJECT TO INSPECT</div>
+                    <!-- Dynamic content will be injected here -->
+                    <div class="object-details hidden" id="object-details-view">
+                        <div class="obj-header">
+                            <span class="obj-id">#ID_NULL</span>
+                            <span class="obj-type">CLASS_NULL</span>
+                        </div>
+                        <div class="obj-visual">
+                            <div class="wireframe-placeholder"></div>
+                        </div>
+                        <table class="obj-stats-table">
+                            <tbody id="obj-stats-body">
+                                <!-- Stats rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="panel-header secondary-header">
+                    <h3>// AVAILABLE_CMDS</h3>
+                </div>
+                <div class="panel-content cmd-list" id="cmd-list-panel">
+                    <div class="cmd-item">help</div>
+                    <div class="cmd-item">connect</div>
+                    <div class="cmd-item">list</div>
+                    <div class="cmd-item">exit</div>
+                </div>
+            </aside>
+
+        </main>
+
+        <footer>
+            SESSION_ID: <span class="highlight">8X-992-B</span> | ENCRYPTION: <span class="highlight">AES-4096</span> |
+            LATENCY: <span class="highlight">2ms</span>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
